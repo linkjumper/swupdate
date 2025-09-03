@@ -1057,7 +1057,13 @@ int main(int argc, char **argv)
 	 * If an AES key is passed, load it to allow
 	 * to decrypt images
 	 */
-	if (strlen(swcfg.aeskeyfname)) {
+	if (!strlen(swcfg.aeskeyfname)) {
+#ifdef CONFIG_ENCRYPTED_SW_DESCRIPTION
+		fprintf(stderr,
+			"Error: Encrypted sw-description expected, but no key provided.\n");
+		exit(EXIT_FAILURE);
+#endif
+	} else {
 		if (load_decryption_key(swcfg.aeskeyfname)) {
 			fprintf(stderr,
 				"Error: Key file does not contain a valid AES key.\n");
